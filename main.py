@@ -8,14 +8,13 @@ from io import BytesIO
 import base64
 import os
 
-# --- Load environment variables from .env if present ---
-try:
-    from dotenv import load_dotenv
-    load_dotenv()
-except ImportError:
-    os.system("pip install python-dotenv")
-    from dotenv import load_dotenv
-    load_dotenv()
+# --- Remove dotenv loading for Streamlit Cloud compatibility ---
+# If running locally and you want to use .env, uncomment below:
+# try:
+#     from dotenv import load_dotenv
+#     load_dotenv()
+# except ImportError:
+#     pass
 
 # --- Handle fpdf import and install if missing ---
 try:
@@ -102,7 +101,7 @@ st.info(
 # --- Use SERPER_API_KEY from environment variable for security ---
 SERPER_API_KEY = os.environ.get("SERPER_API_KEY")
 if not SERPER_API_KEY:
-    st.error("Serper API key not found in environment variable 'SERPER_API_KEY'. Please set it in your environment for security. You can add it to a `.env` file in your project root as:\n\nSERPER_API_KEY=your_api_key_here")
+    st.error("Serper API key not found in environment variable 'SERPER_API_KEY'. Please set it in your environment for security. If running locally, you can add it to a `.env` file in your project root as:\n\nSERPER_API_KEY=your_api_key_here\n\nIf running on Streamlit Cloud, set it as a secret or environment variable in the app settings.")
     st.stop()
 
 # --- Dynamic Year Range Selection ---
