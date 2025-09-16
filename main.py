@@ -6,12 +6,21 @@ import re
 from datetime import datetime
 from io import BytesIO
 import base64
+import os
+
+# --- Load environment variables from .env if present ---
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    os.system("pip install python-dotenv")
+    from dotenv import load_dotenv
+    load_dotenv()
 
 # --- Handle fpdf import and install if missing ---
 try:
     from fpdf import FPDF
 except ImportError:
-    import os
     os.system("pip install fpdf")
     from fpdf import FPDF
 
@@ -19,7 +28,6 @@ except ImportError:
 try:
     import xlsxwriter
 except ImportError:
-    import os
     os.system("pip install xlsxwriter")
     import xlsxwriter
 
@@ -91,7 +99,11 @@ st.info(
     "Searches Google (via Serper API) for public LinkedIn profiles. Filter, preview, and export results as CSV, Excel, or PDF."
 )
 
-SERPER_API_KEY = "29f8f646030734dd78ef010c8af9f5f68c46d4da"
+# --- Use SERPER_API_KEY from environment variable for security ---
+SERPER_API_KEY = os.environ.get("SERPER_API_KEY")
+if not SERPER_API_KEY:
+    st.error("Serper API key not found in environment variable 'SERPER_API_KEY'. Please set it in your environment for security. You can add it to a `.env` file in your project root as:\n\nSERPER_API_KEY=your_api_key_here")
+    st.stop()
 
 # --- Dynamic Year Range Selection ---
 st.sidebar.markdown("### 🎓 Year Range Selection")
@@ -423,13 +435,3 @@ if show_history and st.session_state.search_history:
             st.dataframe(hist_df, use_container_width=True, hide_index=True)
             st.caption(f"Search #{len(st.session_state.search_history)-i+1}")
 
-# --- Footer ---
-st.markdown(
-    """
-    <hr style="margin-top:2em;margin-bottom:0.5em;">
-    <div style="text-align:center;color:#64748b;font-size:0.98em;">
-        &copy; {year} Indian Students in USA Masters Finder &mdash; <a href="mailto:someone@example.com">Contact</a>
-    </div>
-    """.format(year=datetime.now().year),
-    unsafe_allow_html=True,
-)
