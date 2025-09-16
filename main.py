@@ -16,19 +16,11 @@ import os
 # except ImportError:
 #     pass
 
-# --- Handle fpdf import and install if missing ---
-try:
-    from fpdf import FPDF
-except ImportError:
-    os.system("pip install fpdf")
-    from fpdf import FPDF
-
-# --- Handle xlsxwriter import and install if missing ---
-try:
-    import xlsxwriter
-except ImportError:
-    os.system("pip install xlsxwriter")
-    import xlsxwriter
+# --- Import fpdf and xlsxwriter directly for Streamlit Cloud compatibility ---
+# On Streamlit Cloud, all dependencies must be in requirements.txt.
+# Do NOT attempt to install packages at runtime.
+from fpdf import FPDF
+import xlsxwriter
 
 # --- Enhanced UI Styling ---
 st.set_page_config(page_title="🇮🇳 Indian Students in USA Masters Finder", layout="wide", page_icon="🎓")
